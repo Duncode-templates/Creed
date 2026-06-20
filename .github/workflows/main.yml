@@ -26,10 +26,12 @@ jobs:
           pip install requests beautifulsoup4 firebase-admin google-generativeai
 
       - name: Setup Firebase Credentials File
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > service-account.json
-        # Only creates service-account.json if the Firebase service account secret is configured in the repository
-        if: "${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' }}"
+          if [ -n "$FIREBASE_SERVICE_ACCOUNT_JSON" ]; then
+            echo "$FIREBASE_SERVICE_ACCOUNT_JSON" > service-account.json
+          fi
 
       - name: Execute Football News Crawler
         env:
